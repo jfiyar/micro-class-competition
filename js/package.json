@@ -1,0 +1,34 @@
+{
+  "name": "admin-3",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "antd": "^3.12.4",
+    "babel-plugin-import": "^1.11.0",
+    "customize-cra": "^0.2.9",
+    "echarts": "^4.2.1",
+    "md5": "^2.2.1",
+    "moment": "^2.24.0",
+    "react": "^16.7.0",
+    "react-app-rewired": "^2.0.2",
+    "react-dom": "^16.7.0",
+    "react-hot-loader": "^4.6.3",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.3",
+    "styled-components": "^4.1.3"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
