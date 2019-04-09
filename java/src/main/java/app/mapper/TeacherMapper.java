@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeacherMapper {
-    @Insert("insert into user (account,password) values (#{account},#{password})")
-    void add(@Param("uid")int uid,@Param("university")int university);
+    @Insert("insert into teacher (teacher_user_id,teacher_university_id) values (#{user_id},#{university_id})")
+    void add(@Param("user_id")int user_id,@Param("university_id")int university_id);
 }

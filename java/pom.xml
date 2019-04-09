@@ -11,10 +11,10 @@
 
 
 
-    <groupId>com</groupId>
-    <artifactId>app</artifactId>
+    <groupId>github</groupId>
+    <artifactId>jfiy</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>art</name>
+    <name>micro-class-competition</name>
     <description>spring-boot mybatis project</description>
 
     <properties>
