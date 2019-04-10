@@ -33,4 +33,4 @@ const post=(url,data)=>{
 }
 
 export default get
-export {get,post}
+export {get,post,ip}

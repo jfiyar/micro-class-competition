@@ -58,6 +58,8 @@ class Login extends Component {
     checkpassword=(r,v,cb)=>{
         if(v&&v.length<6){
             cb('密码强度太低');
+        }else{
+            cb()
         }
     }
     compareToFirstPassword = (rule, value, callback) => {
@@ -70,25 +72,29 @@ class Login extends Component {
     }
     submit = e => {
         e.preventDefault()
-        this.props.form.validateFields(async (err, val) => {
+        const form=this.props.form
+        form.validateFields((err,val)=>{
+            console.log(err)
             if (err) {
                 return
             }
             this.setState({loading:true})
-            localStorage.setItem("code",val.code)
-
-            try{
-                let data = await post('/open/login',{code:val.code,password:md5(val.password)})
-
-            }catch(e){
-                message.error("无法连接到服务器")
-                this.setState({ loading: false })
-            }
+            delete val['re-password']
+            val.password=md5(val.password);
+            localStorage.setItem("account",val.account)
+            post('/open/register',val).then(json=>{
+                this.setState({loading:false})
+                if(json.code===0){
+                    this.props.history.push('/login')
+                }else{
+                    message.error(json.message)
+                }
+            })
         })
     }
     componentDidMount(){
         get("/open/university").then(json=>{
-
+            this.setState({university:json.data})
         })
     }
     render() {
@@ -122,13 +128,13 @@ class Login extends Component {
                             )}
                         </Item>
                         <Item style={{marginBottom:0}}>
-                            {getFieldDecorator('university', {
+                            {getFieldDecorator('university_id', {
                                 rules: [{ required: true, message: '不能为空' }],
                             })(
-                                <Select placeholder="选择你的学校" showSearch prefix={<Icon type="lock" />} type="password" >
+                                <Select placeholder="选择你的学校" optionFilterProp="children" showSearch type="password" >
 
                                     {this.state.university.map(v=>{
-                                        return <Select.Option value={v.university_id}>{v.university_name}</Select.Option>
+                                        return <Select.Option key={v.university_id} value={v.university_id}>{v.university_name}</Select.Option>
                                     })}
                                 </Select>
                             )}

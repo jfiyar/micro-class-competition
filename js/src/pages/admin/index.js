@@ -8,12 +8,12 @@ import Judge from './judge';
 import Univercity from './university';
 import MicroClass from './micro-class';
 import MicroClassType from './micro-class-type';
+import Competition from './competition';
 
 class Admin extends React.Component{
     constructor(props){
         super(props)
         let key=props.location.pathname.split("/admin")[1].split('/')[1];
-        console.log(props.location.pathname.split("/admin"),key)
         if(key===""||key==="/"||typeof key==="undefined"){
             key='home'
         }
@@ -33,17 +33,19 @@ class Admin extends React.Component{
             <Layout.Sider>
                 <Menu onSelect={this.handleMenuSelect} defaultSelectedKeys={[this.defaultSelectedKey]} mode="inline" theme="dark">
                     <Menu.Item key="/admin/home" >首页</Menu.Item>
-                    <Menu.Item key="/admin/user" >用户管理</Menu.Item>
+                    <Menu.Item key="/admin/competition" >比赛管理</Menu.Item>
+                    <Menu.Item key="/admin/teacher" >参赛教师管理</Menu.Item>
                     <Menu.Item key="/admin/judge" >裁判管理</Menu.Item>
                     <Menu.Item key="/admin/university" >高校管理</Menu.Item>
                     <Menu.Item key="/admin/micro-class" >微课管理</Menu.Item>
                     <Menu.Item key="/admin/micro-class-type" >微课分类管理</Menu.Item>
                 </Menu>
             </Layout.Sider>
-            <Layout.Content>
+            <Layout.Content style={{minHeight:'calc(100vh - 64px)'}}>
                 <Switch>
                     <Route path="/admin/home" component={Home} />
-                    <Route path="/admin/user" component={User} />
+                    <Route path="/admin/teacher" component={User} />
+                    <Route path="/admin/competition" component={Competition} />
                     <Route path="/admin/judge" component={Judge} />
                     <Route path="/admin/university" component={Univercity} />
                     <Route path="/admin/micro-class" component={MicroClass} />

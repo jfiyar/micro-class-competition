@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { withRouter,Link } from 'react-router-dom';
 import md5 from 'md5';
 import bg from '@/images/bg.png'
+import {post} from '@/utils/request'
 
 
 
@@ -61,10 +62,8 @@ class Login extends Component {
                 return
             }
             this.setState({loading:true})
-            localStorage.setItem("code",val.code)
-
             try{
-                let data = await window.post('/open/login',{code:val.code,password:md5(val.password)})
+                let data = await post('/open/login',{account:val.code,password:md5(val.password)})
                 this.setState({ loading: false })
                 if(data.code!==0){
                     message.error(data.message)
@@ -74,12 +73,7 @@ class Login extends Component {
                 localStorage.setItem("token",data.token)
                 localStorage.setItem("auth",data.auth)
                 const {history}=this.props
-                switch (data.auth){
-                    case 1:history.push('/emp');break
-                    case 2:history.push('/sup');break
-                    case 3:history.push('/adm');break
-                    default:history.push('/login')
-                }
+                history.push('/')
             }catch(e){
                 message.error("无法连接到服务器")
                 this.setState({ loading: false })

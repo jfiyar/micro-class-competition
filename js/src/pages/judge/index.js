@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout,Divider,Empty} from "antd";
+import {Layout,Empty} from "antd";
 import UserAvatar from "@/components/avatar";
 import banner from '@/images/banner.jpg';
 
