@@ -49,7 +49,12 @@ public class TeacherController {
         int user_id=(int)req.getAttribute("this_user_id");
         File path = new File(ResourceUtils.getURL("classpath:").getPath());
         if(!path.exists()) path = new File("");
-        String media="/upload/"+new Date().toString()+user_id+id+file.getOriginalFilename();
+        String media="/upload/"+new Date().getTime()+"&&"+user_id+"&&"+id+"&&"+file.getOriginalFilename();
+        mcMapper.update(new HashMap<String,Object>(){{
+            put("media",media);
+            put("user_id",user_id);
+            put("competition_id",id);
+        }});
         file.transferTo(new File(path.getAbsolutePath()+"/static"+media));
     }
 }

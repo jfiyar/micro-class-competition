@@ -6,6 +6,8 @@ import Register from './register'
 import Teacher from "./teacher";
 import Judge from './judge';
 import Admin from './admin';
+import JudgeMc from './judge/judge-mc';
+
 const Homepage=({history})=>{
     if(!localStorage.getItem("token")){
         history.push("/login")
@@ -30,6 +32,7 @@ const Pages = ()=>{
         <Route path="/" component={Homepage} exact />
         <Switch>
             <Route path="/teacher" component={Teacher} />
+            <Route path="/judge/:judge_id" component={JudgeMc} exact />
             <Route path="/judge" component={Judge}  />
             <Route path="/admin" component={Admin}  />
             <Route path="/login" component={Login}  />

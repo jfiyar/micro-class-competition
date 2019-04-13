@@ -8,7 +8,7 @@ class MySelect extends React.Component{
     componentDidMount(){
         get('/admin/user',{type:2,competition_id:this.props.d.competition_id}).then(json=>{
             json.data.user.map(i=>{
-                i.judge_competition_id&&this.def.push(i.user_id)
+                return i.judge_competition_id&&this.def.push(i.user_id)
             })
             this.props.onChange(this.def)
             this.setState({ops:json.data.user,loading:true})

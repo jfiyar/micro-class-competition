@@ -1,14 +1,15 @@
 import React from "react";
-import {Layout,Divider,Empty, Button, message, Tooltip, Upload} from "antd";
+import {Layout,Divider,Empty, Button, message, Upload, Modal} from "antd";
 import UserAvatar from "@/components/avatar";
 import banner from '@/images/banner.jpg';
 import {get,ip} from '@/utils/request'
 import bg from '@/images/true.jpeg'
+
 class MyUpload extends React.Component{
     state={}
     uploadProps = {
         name: 'file',
-        action: ip+'/teacher/micro-class/upload',
+        action: `${ip}/teacher/competition/${this.props.competition_id}/upload`,
         headers: {
             authorization: localStorage.getItem('token'),
         },
@@ -20,11 +21,11 @@ class MyUpload extends React.Component{
         onChange:info=> {
             if (info.file.status === 'uploading') {
                 if(info.event){
-                    console.log(parseFloat(info.event.percent))
                     this.setState({progress:parseFloat(info.event.percent)})
                 }
             }
             if (info.file.status === 'done') {
+                this.props.onSuccess()
                 this.setState({
                     loading:false
                 })
@@ -39,7 +40,7 @@ class MyUpload extends React.Component{
     };
     render(){
         return<Upload {...this.uploadProps} ><Button loading={this.state.loading} ghost size="small" icon="upload" >
-        {this.state.loading?parseInt(this.state.progress)+'%':'上传'}
+        {this.state.loading?parseInt(this.state.progress)+'%':this.props.title}
         </Button></Upload>
     }
 }
@@ -86,6 +87,7 @@ class Teacher extends React.Component{
     }
     loadMyCompetition=()=>{
         get('/teacher/micro-class').then(json=>{
+            console.log(json);
             this.setState({myCompetition:json.data})
         })
     }
@@ -115,15 +117,18 @@ class Teacher extends React.Component{
                         {this.state.myCompetition.length===0&&<Empty description={"您还没有参赛作品哦"} />}
                         <div style={{whiteSpace:'nowrap',overflowX:'auto'}}>
                             {this.state.myCompetition.map(com=>{
-                                return <div style={{display:'inline-block',width:300,height:180,whiteSpace:'normal',margin:20,background:`url(${bg}) center`,
-                                backgroundSize:'cover',borderRadius:10,overflow:'hidden',color:'#fff'
+                                return <div key={com.competition_id} style={{display:'inline-block',width:300,height:180,whiteSpace:'normal',margin:20,background:`url(${bg}) center`,
+                                backgroundSize:'cover',borderRadius:10,overflow:'hidden',color:'#fff',position:'relative'
                                 }}>
                                 <div style={{width:'100%',height:'100%',padding:20,background:'rgba(0,0,0,.6)'}}>
                                     <div style={{textAlign:'center',paddingBottom:10,fontSize:18}}>{com.competition_name}</div>
-                                    <div style={{fontSize:12,height:20,overflow:'hidden'}}>时间：<Tooltip title={com.competition_time}>{com.competition_time}</Tooltip></div>
+                                    <div style={{fontSize:12,height:20,overflow:'hidden'}}>时间：{com.competition_time}</div>
                                     <div>分类：{com.type_name}</div>
                                     <div>排行：{com.score?com.score:"待结算"}</div>
-                                    <div style={{textAlign:'right',marginTop:20}}><MyUpload/></div>
+                                    <div style={{textAlign:'right',marginTop:20}}>
+                                        {com.media&&<Button onClick={()=>this.setState({media:com.media})} icon="eye" size="small" ghost style={{marginRight:20}} >预览</Button>}
+                                        <MyUpload onSuccess={this.loadMyCompetition} title={com.media?'重新上传':'上传'} competition_id={com.competition_id} />
+                                    </div>
                                 </div>
                                 </div>
                             })}
@@ -135,6 +140,9 @@ class Teacher extends React.Component{
                     <Competition onSuccess={this.loadMyCompetition} />
                 </div>
             </div>
+            <Modal title="作品预览" width={640} bodyStyle={{padding:"6px 6px 0 6px"}} footer={false} onCancel={()=>this.setState({media:false})} destroyOnClose visible={!!this.state.media}>
+                <video autoPlay style={{width:"100%"}} controls src={ip+this.state.media}></video>
+            </Modal>
         </Layout.Content>
     </Layout>
     }
