@@ -31,7 +31,7 @@ class MyCompetition extends React.Component{
                             <div style={{textAlign:'center',fontSize:20,marginBottom:20}}>{com.competition_name}</div>
                             <div>类型：{com.type_name}</div>
                             <div style={{whiteSpace:"nowrap",overflowX:'hidden'}}>时间：{com.competition_time}</div>
-                            <div>作品{com.media}个，{com.review}个已打分 <span style={{float:'right'}}>进度{com.review/com.media*100}%</span></div>
+                            <div>作品{com.count}个，{com.review}个已打分 <span style={{float:'right'}}>进度{com.review/com.count*100}%</span></div>
                             <div style={{textAlign:'right',marginTop:20}}><Link to={'/judge/'+com.judge_id}><Button type="primary" >进入比赛</Button></Link></div>
                         </div>
                 </div>

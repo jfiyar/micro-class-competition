@@ -24,22 +24,25 @@ public class JudgeController {
     @GetMapping("/competition")
     public List<HashMap> competition(HttpServletRequest request){
         int judge=(int)request.getAttribute("this_user_id");
-        return judgeMapper.find(new HashMap<String,Object>(){{
+        return judgeMapper.findCompetition(new HashMap<String,Object>(){{
             put("user_id",judge);
         }});
     }
-    @GetMapping("/competition/{id}")
-    public HashMap competitionDesc(@PathVariable int id,int judge_id){
-        List<HashMap> list=judgeMapper.find(new HashMap<String,Object>(){{
-            put("judge_id",id);
-            put("limit",1);
-        }});
-        HashMap<String,Object> map=list.get(0);
-        map.put("mc",mcMapper.find(new HashMap<String,Object>(){{
-            put("competition_id",map.get("competition_id"));
-            put("judge_id",judge_id);
-        }}));
-        return map;
+    /**
+     * 裁判比赛信息judge_id=>{比赛基本信息，[作品信息]}
+     */
+    @GetMapping("/competition/{judge_id}")
+    public HashMap competitionDesc(@PathVariable int judge_id){
+//        List<HashMap> list=judgeMapper.findMicroClass(new HashMap<String,Object>(){{
+//            put("judge_id",id);
+//            put("limit",1);
+//        }});
+//        HashMap<String,Object> map=list.get(0);
+//        map.put("mc",mcMapper.find(new HashMap<String,Object>(){{
+//            put("competition_id",map.get("competition_id"));
+//            put("judge_id",id);
+//        }}));
+        return null;
     }
     @PostMapping("/micro-class/{id}")
     public void judgeMc(@PathVariable int id,@RequestParam HashMap<String,Object> map,boolean isUpdate){

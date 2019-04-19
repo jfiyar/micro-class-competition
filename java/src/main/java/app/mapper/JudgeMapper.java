@@ -17,22 +17,15 @@ public interface JudgeMapper {
     @Delete("delete from judge where judge_competition_id=#{judge_competition_id}")
     void remove(HashMap map);
 
-    @Select("<script>select *," +
-            "(select count(1) from micro_class where competition_id=mc_competition_id and media!=null) media " +
-//            "(select count(1) " +
-//                "from micro_class " +
-//                "where competition_id=mc_competition_id " +
-//                "and media!=null and score!=null) " +
-//            "review " +
-//            "(select count(1) from micro_class where competition_id=mc_competition_id and media=null) media " +
-//            "(select count(1) from micro_class where competition_id=mc_competition_id and media=null) media " +
-            "from judge left join competition on judge_competition_id=competition_id " +
-            "where competition_state=0 " +
-            "<if test='user_id!=null'>and judge_user_id=#{user_id}</if>" +
-            "<if test='judge_id!=null'>and judge_id=#{judge_id}</if>" +
-            "<if test='limit!=null'>limit #{limit}</if>" +
+    @Select("<script>"+
+            "select type_name,judge_id,competition_id,competition_name,competition_time,competition_state,judge_id,(select count(1) from micro_class where mc_competition_id=competition_id) count ,(select count(1) from judge_mc where judge.judge_id=judge_id) review from judge left join competition on competition_id=judge_competition_id left join type on competition_type=type_id where judge_user_id=#{user_id}"+
             "</script>")
-    List<HashMap> find(HashMap map);
+    List<HashMap> findCompetition(HashMap map);
+
+    @Select("<script>"+
+            "select type_name,judge_id,competition_id,competition_name,competition_time,competition_state,judge_id,(select count(1) from micro_class where mc_competition_id=competition_id) count ,(select count(1) from judge_mc where judge.judge_id=judge_id) review from judge left join competition on competition_id=judge_competition_id left join type on competition_type=type_id where judge_user_id=#{user_id}"+
+            "</script>")
+    List<HashMap> findMicroClass(HashMap map);
 
 
 }
