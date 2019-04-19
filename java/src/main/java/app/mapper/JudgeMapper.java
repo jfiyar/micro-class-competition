@@ -18,15 +18,21 @@ public interface JudgeMapper {
     void remove(HashMap map);
 
     @Select("<script>select *," +
-            "(select count(1) from micro_class where competition_id=mc_competition_id) teacher " +
+            "(select count(1) from micro_class where competition_id=mc_competition_id and media!=null) media " +
+//            "(select count(1) " +
+//                "from micro_class " +
+//                "where competition_id=mc_competition_id " +
+//                "and media!=null and score!=null) " +
+//            "review " +
 //            "(select count(1) from micro_class where competition_id=mc_competition_id and media=null) media " +
 //            "(select count(1) from micro_class where competition_id=mc_competition_id and media=null) media " +
             "from judge left join competition on judge_competition_id=competition_id " +
-            "where true " +
+            "where competition_state=0 " +
             "<if test='user_id!=null'>and judge_user_id=#{user_id}</if>" +
             "<if test='judge_id!=null'>and judge_id=#{judge_id}</if>" +
             "<if test='limit!=null'>limit #{limit}</if>" +
             "</script>")
     List<HashMap> find(HashMap map);
+
 
 }

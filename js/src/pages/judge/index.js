@@ -12,28 +12,31 @@ class MyCompetition extends React.Component{
     }
     getMyCompetition=()=>{
         get('/judge/competition').then(json=>{
-        console.log(json)
+            console.log(json)
+            if(json.code!==0){
+                return
+            }
             this.setState({myCompetition:json.data})
         })
     };
     render(){
         return<div>
             {this.state.myCompetition.length===0&&<Empty description={"目前还没有分配给您的比赛哦"} />}
-            <Row gutter={20}>
+            <div style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around'}}>
             {this.state.myCompetition.map(com=>{
-                return <Col key={com.judge_id} style={{marginBottom:20}} span={6}>
-                        <div style={{padding:20,background:'#082a46',color:'#fff',lineHeight:2}} key={com.competition_id+com.judge_user_id}>
+                return <div  style={{margin:20,display:'inline-block'}}>
+                        <div style={{padding:20,background:'#fff',borderRadius:6,
+                        boxShadow:'1px 1px 3px #aaa',
+                        maxWidth:430,width:'90vw',color:'#555',lineHeight:2}} key={com.competition_id+com.judge_user_id}>
                             <div style={{textAlign:'center',fontSize:20,marginBottom:20}}>{com.competition_name}</div>
-                            <div>参赛教师：{com.teacher} 名</div>
+                            <div>类型：{com.type_name}</div>
                             <div style={{whiteSpace:"nowrap",overflowX:'hidden'}}>时间：{com.competition_time}</div>
-                            <div>已上传微课作品：{com.media} 个</div>
-                            <div>已评分作品：0 个</div>
-                            <div>未评分作品：0 个</div>
-                            <div style={{textAlign:'right',marginTop:20}}><Link to={'/judge/'+com.judge_id}><Button ghost>进入比赛</Button></Link></div>
+                            <div>作品{com.media}个，{com.review}个已打分 <span style={{float:'right'}}>进度{com.review/com.media*100}%</span></div>
+                            <div style={{textAlign:'right',marginTop:20}}><Link to={'/judge/'+com.judge_id}><Button type="primary" >进入比赛</Button></Link></div>
                         </div>
-                </Col>
+                </div>
             })}
-            </Row>
+            </div>
         </div>
     }
 }
@@ -62,7 +65,7 @@ const  Teacher=()=>{
                 </div>
             </div>
             <div>
-                <div style={{background:'#fff',marginBottom:10,padding:20}}>
+                <div style={{marginBottom:10,padding:20}}>
                     <Divider>比赛列表</Divider>
                     <MyCompetition/>
                 </div>

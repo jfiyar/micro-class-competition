@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout,Divider,Empty, Button, message, Upload, Modal} from "antd";
+import {Layout,Divider,Empty, Button, message, Upload, Modal, Popconfirm} from "antd";
 import UserAvatar from "@/components/avatar";
 import banner from '@/images/banner.jpg';
 import {get,ip} from '@/utils/request'
@@ -91,6 +91,11 @@ class Teacher extends React.Component{
             this.setState({myCompetition:json.data})
         })
     }
+    handleExit=id=>{
+        get(`/teacher/competition/${id}/remove`).then(json=>{
+            this.loadMyCompetition();
+        })
+    }
     render(){
         return <Layout>
         <Layout.Header style={{color:'#fff'}}>
@@ -126,6 +131,9 @@ class Teacher extends React.Component{
                                     <div>分类：{com.type_name}</div>
                                     <div>排行：{com.score?com.score:"待结算"}</div>
                                     <div style={{textAlign:'right',marginTop:20}}>
+                                        <Popconfirm
+                                            title="确认退出参赛？" okType="danger" onConfirm={()=>{this.handleExit(com.competition_id)}}
+                                        ><Button type="danger" size="small" ghost style={{position:'absolute',left:20}}>退赛</Button></Popconfirm>
                                         {com.media&&<Button onClick={()=>this.setState({media:com.media})} icon="eye" size="small" ghost style={{marginRight:20}} >预览</Button>}
                                         <MyUpload onSuccess={this.loadMyCompetition} title={com.media?'重新上传':'上传'} competition_id={com.competition_id} />
                                     </div>

@@ -24,16 +24,25 @@ public class TeacherController {
     McMapper mcMapper;
 
     @GetMapping("/competition")
-    public HashMap findCompetition(@RequestParam HashMap map){
+    public HashMap findCompetition(@RequestParam HashMap map,HttpServletRequest request){
         return new HashMap<String,Object>(){{
             put("competition",competitionMapper.find(map));
             put("count",competitionMapper.count(map));
+            put("user_id",competitionMapper.count(map));
         }};
     }
     @GetMapping("/competition/{id}/join")
     public void findCompetition(HttpServletRequest request, @PathVariable int id){
         int teacher=(int)request.getAttribute("this_user_id");
         mcMapper.add(new HashMap<String,Object>(){{
+            put("user_id",teacher);
+            put("competition_id",id);
+        }});
+    }
+    @GetMapping("/competition/{id}/remove")
+    public void removeCom(HttpServletRequest request, @PathVariable int id){
+        int teacher=(int)request.getAttribute("this_user_id");
+        mcMapper.remove(new HashMap<String,Object>(){{
             put("user_id",teacher);
             put("competition_id",id);
         }});
