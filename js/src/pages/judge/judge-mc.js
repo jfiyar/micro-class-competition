@@ -1,5 +1,5 @@
 import React from 'react'
-import {Layout, Row, Col, InputNumber,Button, Modal, Input, Form, message, Divider, Icon, Tooltip, Affix} from "antd";
+import {Layout, Button, Modal, message, Divider, Icon, Tooltip} from "antd";
 import UserAvatar from "@/components/avatar";
 import {ip,get} from '@/utils/request';
 import banner from '@/images/banner.jpg';
@@ -15,7 +15,7 @@ class Page extends React.Component{
         this.loadData()
     }
     loadData=()=>{
-        get('/judge/competition/'+this.state.id,{judge_id:this.state.id}).then(json=>{
+        get('/judge/competition/'+this.state.id).then(json=>{
             this.setState({com:json.data})
         })
     }
@@ -42,14 +42,14 @@ class Page extends React.Component{
             </div>
             <br />
             <div style={{margin:20}}>
-                {this.state.com.mc&&this.state.com.mc.map((mc,i)=>{console.log(mc)
+                {this.state.com.mc&&this.state.com.mc.map((mc,i)=>{
                     const name=`作品${i+1}`;
-                    if(mc.score){
+                    if(mc.score|mc.score===0){
                         mc.name=name
                         down.push(mc)
-                        return
+                        return null
                     }
-                    return  (<div  key={mc.mc_id} style={
+                    return  (<div key={mc.mc_id} style={
                             {
                                 margin:20,
                                 background:'#fff',
@@ -66,7 +66,7 @@ class Page extends React.Component{
             </div>
             <Divider ><Icon type="down" />已打分 <Tooltip title="已打分的微课作品，点击查看按钮可以重新审阅、打分。"><Icon style={{color:'#aaa',cursor:'pointer'}} type="question-circle" /></Tooltip></Divider>
             <div style={{margin:20}}>
-                {this.state.com.mc&&down.map((mc,i)=>{console.log(mc)
+                {this.state.com.mc&&down.map((mc,i)=>{
                     const name=mc.name;
                     return  (<div  key={mc.mc_id} style={
                             {
@@ -88,7 +88,7 @@ class Page extends React.Component{
                     </div>)
                 })}
             </div>
-            <div style={{position:'fixed',bottom:100,right:100}}>
+            <div style={{position:'fixed',bottom:'5vh',right:'5vw'}}>
             <Link to="/judge"><Button shape="circle" size="large" type="primary" icon="rollback" /></Link>
             </div>
             <Modal footer={null} width={800} title={this.state.mediaTitle} onCancel={()=>this.setState({media:false})} destroyOnClose visible={!!this.state.media}>

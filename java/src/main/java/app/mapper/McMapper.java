@@ -41,4 +41,14 @@ public interface McMapper {
 
     @Delete("delete from micro_class where mc_user_id=#{user_id} and mc_competition_id=#{competition_id}")
     void remove(HashMap<String, Object> stringObjectHashMap);
+
+    @Select("select micro_class.mc_id,media,score,commend from judge left join micro_class on judge_competition_id=mc_competition_id left join judge_mc on judge_mc.mc_id=micro_class.mc_id where judge.judge_id=#{0}")
+    List<HashMap> findByJudge(int judge_id);
+
+
+    @Select("select * from micro_class left join competition on mc_competition_id=competition_id" +
+            " left join type on competition_type=type_id" +
+            " left join judge_mc on judge_mc.mc_id=micro_class.mc_id" +
+            " where mc_user_id=#{0}")
+    List<HashMap> findByTeacher(int teacherUserId);
 }

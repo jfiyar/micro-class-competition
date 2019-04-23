@@ -1,6 +1,7 @@
 package app.controller;
 
 
+import app.mapper.CompetitionMapper;
 import app.mapper.JudgeMapper;
 import app.mapper.JudgeMcMapper;
 import app.mapper.McMapper;
@@ -21,6 +22,14 @@ public class JudgeController {
     McMapper mcMapper;
     @Autowired
     JudgeMcMapper judgeMcMapper;
+    @Autowired
+    CompetitionMapper competitionMapper;
+
+    /**
+     * 根据裁判信息，获取比列表
+     * @param request 教师信息
+     * @return 比赛列表
+     */
     @GetMapping("/competition")
     public List<HashMap> competition(HttpServletRequest request){
         int judge=(int)request.getAttribute("this_user_id");
@@ -33,16 +42,9 @@ public class JudgeController {
      */
     @GetMapping("/competition/{judge_id}")
     public HashMap competitionDesc(@PathVariable int judge_id){
-//        List<HashMap> list=judgeMapper.findMicroClass(new HashMap<String,Object>(){{
-//            put("judge_id",id);
-//            put("limit",1);
-//        }});
-//        HashMap<String,Object> map=list.get(0);
-//        map.put("mc",mcMapper.find(new HashMap<String,Object>(){{
-//            put("competition_id",map.get("competition_id"));
-//            put("judge_id",id);
-//        }}));
-        return null;
+        HashMap map=competitionMapper.findByJudgeId(judge_id);
+        map.put("mc",mcMapper.findByJudge(judge_id));
+        return map;
     }
     @PostMapping("/micro-class/{id}")
     public void judgeMc(@PathVariable int id,@RequestParam HashMap<String,Object> map,boolean isUpdate){

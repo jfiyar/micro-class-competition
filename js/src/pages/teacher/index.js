@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout,Divider,Empty, Button, message, Upload, Modal, Popconfirm} from "antd";
+import {Layout,Divider,Empty, Button, message, Upload, Modal, Popconfirm, Radio} from "antd";
 import UserAvatar from "@/components/avatar";
 import banner from '@/images/banner.jpg';
 import {get,ip} from '@/utils/request'
@@ -48,7 +48,6 @@ class Competition extends React.Component{
     state={competition:[]};
     componentDidMount(){
         get("/teacher/competition").then(json=>{
-            console.log(json)
             this.setState({competition:json.data.competition})
         })
 
@@ -68,11 +67,25 @@ class Competition extends React.Component{
             {this.state.competition.length===0&&<Empty description={"很遗憾，目前还没有比赛，耐心等待比赛发布"} />}
             <div style={{width:'100%',overflowX:'auto',whiteSpace:'nowrap'}}>
             {this.state.competition.map(com=>{
+
+                if(this.props.type===-2){
+                    if(com.competition_type){
+                        return null
+                    }
+                }else if(this.props.type!==-1&&this.props.type!==com.competition_type){
+                    return null
+                }
                 return <div key={com.competition_id} style={{width:500,padding:20,whiteSpace:'normal',color:'#fff',margin:20,background:'#0d143c',display:'inline-block'}}>
                     <div style={{fontSize:26,textAlign:'center',fontWeight:'lighter'}}>【{com.type_name}】{com.competition_name}</div>
                     <div style={{textAlign:'center',color:'rgba(255,255,255,.6)',paddingBottom:20}}>时间：{com.competition_time}</div>
                     <pre style={{whiteSpace:'normal',lineHeight:2,height:140,overflow:'hidden'}}>{com.competition_desc}</pre>
-                    <div style={{textAlign:'right'}}><Button onClick={()=>{this.handleJoin(com.competition_id)}} ghost>报名参赛</Button></div>
+                    <div style={{textAlign:'right'}}>
+                    {
+                        com.competition_state===1?
+                        <Button onClick={()=>{this.handleJoin(com.competition_id)}} ghost>报名参赛</Button>
+                        :<>当前不可参赛 <Button ghost >查看作品</Button></>
+                    }
+                    </div>
                 </div>
             })}
             </div>
@@ -80,14 +93,18 @@ class Competition extends React.Component{
     }
 }
 
+
+
 class Teacher extends React.Component{
-    state={myCompetition:[]}
+    state={myCompetition:[],types:[],type:-1}
     componentDidMount(){
         this.loadMyCompetition();
+        get('/teacher/competition/types').then(json=>{
+            this.setState({types:json.data})
+        })
     }
     loadMyCompetition=()=>{
         get('/teacher/micro-class').then(json=>{
-            console.log(json);
             this.setState({myCompetition:json.data})
         })
     }
@@ -130,12 +147,20 @@ class Teacher extends React.Component{
                                     <div style={{fontSize:12,height:20,overflow:'hidden'}}>时间：{com.competition_time}</div>
                                     <div>分类：{com.type_name}</div>
                                     <div>排行：{com.score?com.score:"待结算"}</div>
-                                    <div style={{textAlign:'right',marginTop:20}}>
-                                        <Popconfirm
-                                            title="确认退出参赛？" okType="danger" onConfirm={()=>{this.handleExit(com.competition_id)}}
-                                        ><Button type="danger" size="small" ghost style={{position:'absolute',left:20}}>退赛</Button></Popconfirm>
-                                        {com.media&&<Button onClick={()=>this.setState({media:com.media})} icon="eye" size="small" ghost style={{marginRight:20}} >预览</Button>}
-                                        <MyUpload onSuccess={this.loadMyCompetition} title={com.media?'重新上传':'上传'} competition_id={com.competition_id} />
+                                    <div  style={{textAlign:'right',marginTop:20}}>
+                                        {
+                                            com.competition_state===1?<>
+                                            <Popconfirm
+                                                    title="确认退出参赛？" okType="danger" onConfirm={()=>{this.handleExit(com.competition_id)}}
+                                                ><Button type="danger" size="small" ghost style={{position:'absolute',left:20}}>退赛</Button></Popconfirm>
+                                                {com.media&&<Button onClick={()=>this.setState({media:com.media})} icon="eye" size="small" ghost style={{marginRight:20}} >预览</Button>}
+                                                <MyUpload onSuccess={this.loadMyCompetition} title={com.media?'重新上传':'上传'} competition_id={com.competition_id} />
+                                            </>:
+                                            <>
+                                                {com.media&&<Button onClick={()=>this.setState({media:com.media})} icon="eye" size="small" ghost style={{marginRight:20}} >查看全部</Button>}
+                                                已结束
+                                            </>
+                                        }
                                     </div>
                                 </div>
                                 </div>
@@ -144,8 +169,15 @@ class Teacher extends React.Component{
                     </div>
                 </div>
                 <div style={{background:'#fff',padding:20}}>
+                    {/* 分类 */}
+                    <Radio.Group value={this.state.type} onChange={(e,v)=>this.setState({type:e.target.value})} buttonStyle="solid" style={{margin:'20px 20px 0 20px'}}>
+                        <Radio.Button value={-1}>全部</Radio.Button>
+                        {this.state.types.map(t=><Radio.Button key={t.type_id} value={t.type_id}>{t.type_name}</Radio.Button>)}
+                        <Radio.Button value={-2}>其它</Radio.Button>
+
+                    </Radio.Group>
                     <Divider >比赛信息</Divider>
-                    <Competition onSuccess={this.loadMyCompetition} />
+                    <Competition type={this.state.type} onSuccess={this.loadMyCompetition} />
                 </div>
             </div>
             <Modal title="作品预览" width={640} bodyStyle={{padding:"6px 6px 0 6px"}} footer={false} onCancel={()=>this.setState({media:false})} destroyOnClose visible={!!this.state.media}>

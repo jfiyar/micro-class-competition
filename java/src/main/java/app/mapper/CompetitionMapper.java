@@ -29,4 +29,10 @@ public interface CompetitionMapper {
             "where competition_id=#{competition_id}" +
             "</script>")
     void update(HashMap map);
+
+    @Select("select * from judge left join competition on competition_id=judge_competition_id where judge_id=#{0}")
+    HashMap findByJudgeId(int judge_id);
+
+    @Select("select * from type")
+    List<HashMap> findTypes();
 }

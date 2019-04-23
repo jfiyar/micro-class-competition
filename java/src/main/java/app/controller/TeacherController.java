@@ -31,6 +31,10 @@ public class TeacherController {
             put("user_id",competitionMapper.count(map));
         }};
     }
+    @GetMapping("/competition/types")
+    public List findComTypes(){
+        return competitionMapper.findTypes();
+    }
     @GetMapping("/competition/{id}/join")
     public void findCompetition(HttpServletRequest request, @PathVariable int id){
         int teacher=(int)request.getAttribute("this_user_id");
@@ -49,9 +53,7 @@ public class TeacherController {
     }
     @GetMapping("/micro-class")
     public List mc(HttpServletRequest req){
-        return mcMapper.find(new HashMap<String,Object>(){{
-            put("user_id",req.getAttribute("this_user_id"));
-        }});
+        return mcMapper.findByTeacher((int)req.getAttribute("this_user_id"));
     }
     @PostMapping("/competition/{id}/upload")
     public void upload(MultipartFile file,HttpServletRequest req,@PathVariable int id) throws IOException {

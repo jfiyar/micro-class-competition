@@ -14,9 +14,8 @@ class RateForm extends React.Component{
                 data.isUpdate=true;
             }
             post('/judge/micro-class/'+this.props.judgeId,data).then(json=>{
-                console.log(json)
+                this.props.onSuccess();
             })
-            this.props.onSuccess();
         })
     }
     render(){
@@ -24,7 +23,7 @@ class RateForm extends React.Component{
         return(
             <Form onSubmit={this.handleSubmit} labelCol={{sm:2}} wrapperCol={{sm:22}}>
                 <Form.Item label="成绩">
-                    {getFieldDecorator('score',{initialValue:this.props.score,rules:[{required:true}]})(<Slider style={{width:580,display:'inline-block',float:'left'}} min={0} max={100} />)}
+                    {getFieldDecorator('score',{initialValue:this.props.score,rules:[{required:true}]})(<Slider style={{width:580,maxWidth:'97%',display:'inline-block',float:'left'}} min={0} max={100} />)}
                     {getFieldDecorator('score',{initialValue:this.props.score,rules:[{required:true}]})(<InputNumber style={{float:'right',marginTop:2}} min={0} max={100} />)}
                 </Form.Item>
                 <Form.Item label="点评">

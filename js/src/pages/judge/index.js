@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout,Button,Empty, Divider, Col, Row} from "antd";
+import {Layout,Button,Empty, Divider, Badge} from "antd";
 import UserAvatar from "@/components/avatar";
 import banner from '@/images/banner.jpg';
 import{get}from '@/utils/request';
@@ -12,7 +12,6 @@ class MyCompetition extends React.Component{
     }
     getMyCompetition=()=>{
         get('/judge/competition').then(json=>{
-            console.log(json)
             if(json.code!==0){
                 return
             }
@@ -30,9 +29,12 @@ class MyCompetition extends React.Component{
                         maxWidth:430,width:'90vw',color:'#555',lineHeight:2}} key={com.competition_id+com.judge_user_id}>
                             <div style={{textAlign:'center',fontSize:20,marginBottom:20}}>{com.competition_name}</div>
                             <div>类型：{com.type_name}</div>
-                            <div style={{whiteSpace:"nowrap",overflowX:'hidden'}}>时间：{com.competition_time}</div>
+                            <div style={{whiteSpace:"nowrap",overflowX:'hidden'}}>参赛时间：{com.competition_time}</div>
                             <div>作品{com.count}个，{com.review}个已打分 <span style={{float:'right'}}>进度{com.review/com.count*100}%</span></div>
-                            <div style={{textAlign:'right',marginTop:20}}><Link to={'/judge/'+com.judge_id}><Button type="primary" >进入比赛</Button></Link></div>
+                            <div style={{textAlign:'right',marginTop:20}}>{
+                                com.competition_state===0?<Link to={'/judge/'+com.judge_id}><Button type="primary" >去打分</Button></Link>:
+                                <span><Badge color="#ff5722" dot /> 进行中</span>
+                            }</div>
                         </div>
                 </div>
             })}
