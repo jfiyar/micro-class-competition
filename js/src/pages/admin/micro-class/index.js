@@ -1,52 +1,54 @@
 import React from 'react';
-import { Table,Button } from 'antd';
-import {get} from '@/utils/request';
+import { Table, Button } from 'antd';
+import { get } from '@/utils/request';
 
-class Home extends React.Component{
-    state={data:[]}
-    offset=0;
-    limit=10;
-    columns=[
-        {title:'id',dataIndex:'university_id'},
-        {title:'高校名称',dataIndex:'university_name'},
-        {title:'教师数量（名）',dataIndex:'email'},
-        {title:'平均排名（位）',dataIndex:'email'},
-        {title:'最高排名（位）',dataIndex:'email'},
-        {title:'操作',align:'right',render:d=><Button.Group>
-        <Button icon="lock" type="danger">删除</Button>
-        <Button icon="edit" >编辑</Button>
-        </Button.Group>},
+class Home extends React.Component {
+    state = { data: [] }
+    offset = 0;
+    limit = 10;
+    columns = [
+        { title: '参赛教师', dataIndex: 'university_id' },
+        { title: '比赛名', dataIndex: 'university_name' },
+        { title: '教师数量（名）', dataIndex: 'email' },
+        { title: '平均排名（位）', dataIndex: 'email' },
+        { title: '最高排名（位）', dataIndex: 'email' },
+        {
+            title: '操作', align: 'right', render: d => <Button.Group>
+                <Button icon="lock" type="danger">删除</Button>
+                <Button icon="edit" >编辑</Button>
+            </Button.Group>
+        },
     ]
-    componentDidMount(){
+    componentDidMount() {
         this.getData();
     }
-    getData=()=>{
-        this.setState({loading:true})
-        return get('/admin/user',{
-            offset:this.offset,
-            limit:this.limit,
-            type:2,
-        }).then(json=>{
-            this.setState({user:json.data.user,count:json.data.count,loading:false})
+    getData = () => {
+        this.setState({ loading: true })
+        return get('/admin/micro_class', {
+            offset: this.offset,
+            limit: this.limit,
+            type: 2,
+        }).then(json => {
+            this.setState({ user: json.data.micro_class, count: json.data.count, loading: false })
         })
     }
-    pageChange=(page,limit)=>{
-        this.offset=(page-1)*limit;
-        this.limit=limit;
+    pageChange = (page, limit) => {
+        this.offset = (page - 1) * limit;
+        this.limit = limit;
         this.getData();
     }
-    render(){
-        return<div>
-            <Table loading={this.state.loading} columns={this.columns} 
-                rowSelection={{onChange:()=>{}}}
+    render() {
+        return <div>
+            <Table loading={this.state.loading} columns={this.columns}
+                rowSelection={{ onChange: () => { } }}
                 pagination={{
-                    onChange:this.pageChange,
-                    onShowSizeChange:this.pageChange,
-                    total:this.state.count,
-                    showQuickJumper:true,
-                    showSizeChanger:true,
-                    showTotal:(d)=>'共'+d+'条数据'
-                }} 
+                    onChange: this.pageChange,
+                    onShowSizeChange: this.pageChange,
+                    total: this.state.count,
+                    showQuickJumper: true,
+                    showSizeChanger: true,
+                    showTotal: (d) => '共' + d + '条数据'
+                }}
                 dataSource={this.state.user}
             >
 

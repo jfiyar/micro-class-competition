@@ -1,5 +1,5 @@
 import React from 'react'
-import {Route, Switch} from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Login from './login'
 import NotFound from './404'
 import Register from './register'
@@ -8,36 +8,36 @@ import Judge from './judge';
 import Admin from './admin';
 import JudgeMc from './judge/judge-mc';
 
-const Homepage=({history})=>{
-    if(!localStorage.getItem("token")){
+const Homepage = ({ history }) => {
+    if (!localStorage.getItem("token")) {
         history.push("/login")
-    }else {
-        const auth=localStorage.getItem("auth");
-        if(!auth){
+    } else {
+        const auth = localStorage.getItem("auth");
+        if (!auth) {
             history.push("/login")
-        }else {
-            switch (auth){
-                case "1":history.push("/teacher");break;
-                case "2":history.push("/judge");break;
-                case "3":history.push("/admin");break;
-                default:history.push("/login");
+        } else {
+            switch (auth) {
+                case "1": history.push("/teacher"); break;
+                case "2": history.push("/judge"); break;
+                case "3": history.push("/admin"); break;
+                default: history.push("/login");
             }
         }
     }
     return null;
 };
 
-const Pages = ()=>{
+const Pages = () => {
     return <div>
         <Route path="/" component={Homepage} exact />
         <Switch>
             <Route path="/teacher" component={Teacher} />
             <Route path="/judge/:judge_id" component={JudgeMc} exact />
-            <Route path="/judge" component={Judge}  />
-            <Route path="/admin" component={Admin}  />
-            <Route path="/login" component={Login}  />
-            <Route path="/register" component={Register}  />
-            <Route path="/:any" component={NotFound}  />
+            <Route path="/judge" component={Judge} />
+            <Route path="/admin" component={Admin} />
+            <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
+            <Route path="/:any" component={NotFound} />
         </Switch>
     </div>
 };
