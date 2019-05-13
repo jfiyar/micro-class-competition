@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Button, Drawer, Form, Input, Checkbox, message, Radio } from 'antd';
 import { get, post } from '@/utils/request';
+import md5 from 'md5'
 
 class Home extends React.Component {
     state = { data: [], edit: false }
@@ -42,6 +43,7 @@ class Home extends React.Component {
             const user_id = this.state.edit.user_id
             if (!user_id) data.type = 2
             data.delete = data.delete ? 1 : 0
+            if (data.password) data.password = md5(data.password)
             // console.log(data.delete)
             post(`/admin/user/${user_id ? `${user_id}/update` : `add`}`, data).then(json => {
                 if (json.code !== 0) {

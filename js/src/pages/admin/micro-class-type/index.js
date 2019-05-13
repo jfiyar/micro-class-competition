@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Modal, Input, Divider, Popconfirm } from 'antd';
 import { get, post } from '@/utils/request';
+import University from './University'
 
 class Home extends React.Component {
     state = { type: [] }
@@ -49,14 +50,6 @@ class Home extends React.Component {
                     return <Button style={{ margin: 10 }} onClick={_ => this.setState({ edit: t })} key={t.type_id} >{t.type_name}</Button>
                 })}
             </div>
-            <div style={{ margin: 20, background: '#fff', padding: 20, fontSize: 16 }} >
-                <span style={{ marginTop: 6, display: 'inline-block' }}>全部高校 </span>
-                <Button type="primary" onClick={_ => this.setState({ add: true })} style={{ float: 'right' }} >新增</Button>
-                <Divider />
-                {this.state.type.map(t => {
-                    return <Button style={{ margin: 10 }} onClick={_ => this.setState({ edit: t })} key={t.type_id} >{t.type_name}</Button>
-                })}
-            </div>
             <Modal
                 title="新增类别"
                 visible={this.state.add}
@@ -84,6 +77,7 @@ class Home extends React.Component {
                     </Popconfirm>
                 </>}
             </Modal>
+            <University />
         </div>
     }
 }

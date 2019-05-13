@@ -1,9 +1,6 @@
 package app.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -17,6 +14,9 @@ public interface CompetitionMapper {
     @Select("select * from competition left join type on competition_type=type_id")
     List<HashMap> find(HashMap hashMap);
 
+    @Select("select * from competition left join type on competition_type=type_id where competition_id=#{0}")
+    HashMap findById(int id);
+
     @Select("select count(1) from competition")
     int count(HashMap map);
 
@@ -24,7 +24,11 @@ public interface CompetitionMapper {
             "update competition" +
             "<set>" +
             "<if test='competition_state!=null'>competition_state=#{competition_state}+0,</if>" +
-            "" +
+            "<if test='competition_name!=null'>competition_name=#{competition_name},</if>" +
+            "<if test='competition_desc!=null'>competition_desc=#{competition_desc},</if>" +
+            "<if test='competition_time!=null'>competition_time=#{competition_time},</if>" +
+            "<if test='competition_type!=null'>competition_type=#{competition_type},</if>" +
+            "update_time=now(),"+
             "</set>" +
             "where competition_id=#{competition_id}" +
             "</script>")
@@ -35,4 +39,17 @@ public interface CompetitionMapper {
 
     @Select("select * from type")
     List<HashMap> findTypes();
+
+    @Update("update type set type_name=#{type_name} where type_id=#{type_id}")
+    void updateType(HashMap map);
+
+    @Delete("delete from type where type_id=#{0}")
+    void removeType(int type_id);
+
+    @Delete("delete from competition where competition_id=#{0}")
+    void delete(int competition_id);
+
+    @Insert("insert into type (type_name) values (#{type_name}) ")
+    void addType(HashMap<String, Object> map);
+
 }

@@ -20,8 +20,7 @@ import java.util.List;
 @RequestMapping("/teacher")
 public class TeacherController {
     @Autowired CompetitionMapper competitionMapper;
-    @Autowired
-    McMapper mcMapper;
+    @Autowired McMapper mcMapper;
 
     @GetMapping("/competition")
     public HashMap findCompetition(@RequestParam HashMap map,HttpServletRequest request){
@@ -29,6 +28,13 @@ public class TeacherController {
             put("competition",competitionMapper.find(map));
             put("count",competitionMapper.count(map));
             put("user_id",competitionMapper.count(map));
+        }};
+    }
+    @GetMapping("/competition/{id}")
+    public HashMap teacherCompetition(@PathVariable int id){
+        return new HashMap<String,Object>(){{
+            put("competition",competitionMapper.findById(id));
+            put("micro_class",mcMapper.findByCompetition(id));
         }};
     }
     @GetMapping("/competition/types")

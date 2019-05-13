@@ -57,15 +57,54 @@ public class OpenController {
             throw new AppException(Err.USER_LOGIN_ERR);
         }
         HashMap user=list.get(0);
+        if((int)user.get("delete")==1){
+            throw new AppException(Err.USER_DELETED);
+        }
         return new HashMap(){{
             put("token",new JWTUtil().createJWT(user.get("user_id").toString(),(int)user.get("type"),1000*60*60*24*24));
             put("auth",user.get("type"));
+            put("user",user);
         }};
 
     }
-
+    @PostMapping("/user/update")
+    public void changeUser(@RequestParam HashMap map){
+        System.out.println(map);
+        userMapper.update(map);
+    }
+    @PostMapping("/user/changePassword")
+    public void changePassword(@RequestParam HashMap map){
+        int x=userMapper.changePassword(map);
+        if(x==0){
+            throw new Error("密码不正确");
+        }
+    }
     @GetMapping("/university")
     public List getUniversity(){
         return universityMapper.find();
+    }
+
+    @GetMapping("/method")
+    public String get(){
+        return "get 测试通过";
+    }
+    @PatchMapping("/method")
+    public String patch(){
+        return "patch 测试通过";
+    }
+    @PostMapping("/method")
+    public HashMap post(@RequestParam HashMap map){
+        return map;
+    }
+
+    @PutMapping("/method")
+    public HashMap put(@RequestParam HashMap map){
+        map.put("message","put 测试通过");
+        return map;
+    }
+
+    @DeleteMapping("/method")
+    public String delete(){
+        return "delete 测试通过";
     }
 }

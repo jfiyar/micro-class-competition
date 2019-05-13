@@ -5,6 +5,7 @@ public enum  Err {
     USER_AUTH_ERR(6100,"没有权限"),
     USER_LOGIN_ERR(6200,"账号或密码错误"),
     USER_NOT_LOGIN(6300,"用户未登录"),
+    USER_DELETED(6400,"用户被封禁"),
     ;
 
     private int code;

@@ -69,9 +69,10 @@ class Login extends Component {
                     message.error(data.message)
                     return
                 }
-                data=data.data
+                data = data.data
                 localStorage.setItem("token",data.token)
-                localStorage.setItem("auth",data.auth)
+                localStorage.setItem("auth", data.auth)
+                localStorage.setItem("user",JSON.stringify(data.user))
                 const {history}=this.props
                 history.push('/')
             }catch(e){
